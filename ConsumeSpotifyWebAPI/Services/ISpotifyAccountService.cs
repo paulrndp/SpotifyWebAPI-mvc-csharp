@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace ConsumeSpotifyWebAPI.Services
+﻿namespace ConsumeSpotifyWebAPI.Services
 {
     public interface ISpotifyAccountService
     {

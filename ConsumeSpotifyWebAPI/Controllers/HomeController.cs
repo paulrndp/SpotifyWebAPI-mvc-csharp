@@ -1,7 +1,13 @@
 ﻿using ConsumeSpotifyWebAPI.Models;
 using ConsumeSpotifyWebAPI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ConsumeSpotifyWebAPI.Controllers
 {
@@ -12,7 +18,7 @@ namespace ConsumeSpotifyWebAPI.Controllers
         private readonly ISpotifyService _spotifyService;
 
         public HomeController(
-            ISpotifyAccountService spotifyAccountService, 
+            ISpotifyAccountService spotifyAccountService,
             IConfiguration configuration,
             ISpotifyService spotifyService)
         {
@@ -23,21 +29,27 @@ namespace ConsumeSpotifyWebAPI.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var newRelease = await GetReleases();
-            return View(newRelease);
+            var newReleases = await GetReleases();
+
+            return View(newReleases);
         }
+
         private async Task<IEnumerable<Release>> GetReleases()
         {
             try
             {
-                var token = await _spotifyAccountService.GetToken(_configuration["Spotify:ClientId"], _configuration["Spotify:ClientSecret"]);
-                var newRelease = await _spotifyService.GetNewRelease("PH", 20, token);
-                return newRelease;
+                var token = await _spotifyAccountService.GetToken(
+                    _configuration["Spotify:ClientId"],
+                    _configuration["Spotify:ClientSecret"]);
+
+                var newReleases = await _spotifyService.GetNewReleases("US", 20, token);
+
+                return newReleases;
             }
             catch (Exception ex)
             {
-
                 Debug.Write(ex);
+
                 return Enumerable.Empty<Release>();
             }
         }

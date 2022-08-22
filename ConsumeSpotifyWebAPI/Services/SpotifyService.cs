@@ -1,7 +1,11 @@
 ﻿using ConsumeSpotifyWebAPI.Models;
-using ConsumeSpotifyWebAPI.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace ConsumeSpotifyWebAPI.Services
 {
@@ -13,24 +17,26 @@ namespace ConsumeSpotifyWebAPI.Services
         {
             _httpClient = httpClient;
         }
-        public async Task<IEnumerable<Release>> GetNewRelease(string countryCode, int limit, string accessToken)
+
+        public async Task<IEnumerable<Release>> GetNewReleases(string countryCode, int limit, string accessToken)
         {
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            var response = await _httpClient.GetAsync($"browse/new-release?country={countryCode}&limit={limit}");
+
+            var response = await _httpClient.GetAsync($"browse/new-releases?country={countryCode}&limit={limit}");
 
             response.EnsureSuccessStatusCode();
+
             using var responseStream = await response.Content.ReadAsStreamAsync();
             var responseObject = await JsonSerializer.DeserializeAsync<GetNewReleaseResult>(responseStream);
 
-            return responseObject!.albums.items.Select(i => new Release
+            return responseObject?.albums?.items.Select(i => new Release
             {
                 Name = i.name,
                 Date = i.release_date,
-                ImageUrl = i.images.FirstOrDefault()!.url,
+                ImageUrl = i.images.FirstOrDefault().url,
                 Link = i.external_urls.spotify,
                 Artists = string.Join(",", i.artists.Select(i => i.name))
             });
-
         }
     }
 }
