@@ -1,9 +1,22 @@
-﻿@{
+﻿@model IEnumerable<Release>
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <h6>token : @ViewBag.token</h6>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Spotify New Release</h1>
+    <div class="row">
+        @foreach (var item in Model)
+        {
+        <div class="card m-1" style="width:350px;">
+            <div class="card-body">
+                <h5 class="card-title">@item.Artist</h5>
+                <h6 class="card-subtitle">@item.Name</h6>
+                <p class="card-text">@item.Date</p>
+                <img style="width:150px; height:150px;"src="@item.ImageUrl"/>
+                <a href="@item.Link">Listen</a>
+            </div>
+        </div>            
+        }
+    </div>
 </div>

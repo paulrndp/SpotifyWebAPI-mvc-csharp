@@ -9,27 +9,37 @@ namespace ConsumeSpotifyWebAPI.Controllers
     {
         private readonly ISpotifyAccountService _spotifyAccountService;
         private readonly IConfiguration _configuration;
+        private readonly ISpotifyService _spotifyService;
 
-        public HomeController(ISpotifyAccountService spotifyAccountService, IConfiguration configuration)
+        public HomeController(
+            ISpotifyAccountService spotifyAccountService, 
+            IConfiguration configuration,
+            ISpotifyService spotifyService)
         {
             _spotifyAccountService = spotifyAccountService;
             _configuration = configuration;
+            _spotifyService = spotifyService;
         }
 
         public async Task<IActionResult> Index()
         {
-            string token = "";
+            var newRelease = await GetReleases();
+            return View(newRelease);
+        }
+        private async Task<IEnumerable<Release>> GetReleases()
+        {
             try
             {
-                token = await _spotifyAccountService.GetToken(_configuration["Spotify:ClientId"], _configuration["Spotify:ClientSecret"]);
+                var token = await _spotifyAccountService.GetToken(_configuration["Spotify:ClientId"], _configuration["Spotify:ClientSecret"]);
+                var newRelease = await _spotifyService.GetNewRelease("PH", 20, token);
+                return newRelease;
             }
             catch (Exception ex)
             {
 
                 Debug.Write(ex);
+                return Enumerable.Empty<Release>();
             }
-            ViewBag.token = token;
-            return View();
         }
 
         public IActionResult Privacy()
