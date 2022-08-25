@@ -2,21 +2,29 @@
 @{
     ViewData["Title"] = "Home Page";
 }
-
-<div class="text-center">
-    <h1 class="display-4">Spotify New Release</h1>
+<div class="">
+    <h1 class="display-4">New Release</h1>
     <div class="row">
+
         @foreach (var item in Model)
         {
-        <div class="card m-1" style="width:350px;">
-            <div class="card-body">
-                <h5 class="card-title">@item.Artists</h5>
-                <h6 class="card-subtitle">@item.Name</h6>
-                <p class="card-text">@item.Date</p>
-                <img style="width:150px; height:150px;"src="@item.ImageUrl"/>
-                <a href="@item.Link">Listen</a>
+            <div class="col-lg-6">
+                <div class="card border-secondary mb-3" style="max-width: 500px;">
+                    <div class="row g-0">
+                        <div class="col-sm-5">
+                            <img src="@item.ImageUrl" class="card-img-top h-100" style="padding: 10px;">
+                        </div>
+                        <div class="col-sm-7">
+                            <div class="card-body">
+                                <h5 class="card-title">@item.Name</h5>
+                                <p class="card-text text-justify">@item.Artists</p>
+                                <a href="@item.Link" class="btn btn-primary stretched-link">Listen</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>            
+
         }
     </div>
 </div>

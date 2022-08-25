@@ -1,13 +1,7 @@
 ﻿using ConsumeSpotifyWebAPI.Models;
 using ConsumeSpotifyWebAPI.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ConsumeSpotifyWebAPI.Controllers
 {
@@ -17,10 +11,7 @@ namespace ConsumeSpotifyWebAPI.Controllers
         private readonly IConfiguration _configuration;
         private readonly ISpotifyService _spotifyService;
 
-        public HomeController(
-            ISpotifyAccountService spotifyAccountService,
-            IConfiguration configuration,
-            ISpotifyService spotifyService)
+        public HomeController(ISpotifyAccountService spotifyAccountService, IConfiguration configuration, ISpotifyService spotifyService)
         {
             _spotifyAccountService = spotifyAccountService;
             _configuration = configuration;
